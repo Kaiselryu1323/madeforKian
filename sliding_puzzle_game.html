@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Made for Kian ❤️</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      background: #fefefe;
+      margin: 0;
+      padding: 0;
+    }
+    header {
+      background: #ff6b81;
+      color: white;
+      padding: 20px;
+      font-size: 28px;
+      font-weight: bold;
+    }
+    p.message {
+      margin: 20px;
+      font-size: 18px;
+      color: #333;
+    }
+    canvas {
+      margin-top: 20px;
+      border: 3px solid #333;
+      border-radius: 8px;
+    }
+    button {
+      margin: 20px;
+      padding: 10px 20px;
+      font-size: 16px;
+      border: none;
+      border-radius: 6px;
+      background: #4caf50;
+      color: white;
+      cursor: pointer;
+    }
+    button:hover {
+      background: #388e3c;
+    }
+  </style>
+</head>
+<body>
+  <header>Made for Kian ❤️</header>
+  <p class="message">Here’s a little surprise — complete the puzzle to see our special photo 💙</p>
+
+  <canvas id="puzzleCanvas" width="400" height="400"></canvas><br>
+  <button onclick="shuffle()">Shuffle</button>
+
+  <script>
+    const rows = 3;
+    const cols = 3;
+    const canvas = document.getElementById("puzzleCanvas");
+    const ctx = canvas.getContext("2d");
+    const pieceSize = canvas.width / cols;
+
+    // 👉 Replace this link with your photo URL
+    const img = new Image();
+    img.src = "https://picsum.photos/400"; // placeholder image
+
+    let pieces = [];
+    let empty = {row: rows-1, col: cols-1};
+
+    img.onload = () => {
+      initPuzzle();
+      drawPuzzle();
+    };
+
+    function initPuzzle() {
+      pieces = [];
+      for (let r = 0; r < rows; r++) {
+        for (let c = 0; c < cols; c++) {
+          pieces.push({row: r, col: c, correctRow: r, correctCol: c});
+        }
+      }
+      pieces.pop(); // remove last piece (empty)
+    }
+
+    function drawPuzzle() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      pieces.forEach(p => {
+        ctx.drawImage(
+          img,
+          p.correctCol * pieceSize, p.correctRow * pieceSize, pieceSize, pieceSize,
+          p.col * pieceSize, p.row * pieceSize, pieceSize, pieceSize
+        );
+      });
+    }
+
+    function shuffle() {
+      for (let i = pieces.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [pieces[i].row, pieces[j].row] = [pieces[j].row, pieces[i].row];
+        [pieces[i].col, pieces[j].col] = [pieces[j].col, pieces[i].col];
+      }
+      drawPuzzle();
+    }
+  </script>
+</body>
+</html>
